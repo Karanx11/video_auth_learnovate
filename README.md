@@ -26,15 +26,15 @@ The uploaded videos are stored under `media/`, while the UI and upload logic are
 ## 📁 Project Structure (simplified)
 
 VIDEO_AUTH/
-  ├── video_auth/ ← Django project folder
-  │ ├── manage.py ← Entry point for Django commands
-  │ ├── ... ← settings, urls, wsgi, etc.
-  ├── accounts/ ← Django app: authentication (sign-up/login)
-  ├── media/ ← Uploaded video files stored here
-  ├── static/ ← Static files (css, js, images)
-  ├── templates/ ← HTML templates for frontend & dashboard
-  ├── venv/ ← Virtual environment (not to be committed)
-  └── README.md ← This file
+├── video_auth/ ← Django project folder
+│ ├── manage.py ← Entry point for Django commands
+│ ├── ... ← settings, urls, wsgi, etc.
+├── accounts/ ← Django app: authentication (sign-up/login)
+├── media/ ← Uploaded video files stored here
+├── static/ ← Static files (css, js, images)
+├── templates/ ← HTML templates for frontend & dashboard
+├── venv/ ← Virtual environment (not to be committed)
+└── README.md ← This file
 
 
 
