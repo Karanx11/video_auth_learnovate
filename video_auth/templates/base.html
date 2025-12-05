@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoAuth - Modern Video Verification</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <!-- Modern Navigation -->
+    <nav>
+        <ul>
+            <li><a href="/" class="navbar-brand">🎬 VideoAuth</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="/dashboard/">Dashboard</a></li>
+                <li><a href="/profile/">Profile</a></li>
+                {% if user.is_staff or user.is_superuser %}
+                    <li><a href="/users/">Users</a></li>
+                {% endif %}
+                <li><a href="/contact/">Contact</a></li>
+                <li style="margin-left: auto;"><a href="/logout/" style="color: #f5576c;">Logout</a></li>
+            {% else %}
+                <li><a href="/">Home</a></li>
+                <li><a href="/login/">Login</a></li>
+                <li><a href="/register/">Register</a></li>
+                <li><a href="/contact/">Contact</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container" style="margin-top: 2rem;">
+            {% for message in messages %}
+                <div class="alert alert-success fade-in">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Modern Footer -->
+    <footer>
+        <footer-content>
+            <footer-section>
+                <h4>About VideoAuth</h4>
+                <p>Advanced video authentication and verification system powered by machine learning and modern technology.</p>
+            </footer-section>
+            <footer-section>
+                <h4>Quick Links</h4>
+                <p><a href="/">Home</a></p>
+                <p><a href="/dashboard/">Dashboard</a></p>
+                <p><a href="/profile/">Profile</a></p>
+                <p><a href="/contact/">Contact</a></p>
+            </footer-section>
+            <footer-section>
+                <h4>Technology</h4>
+                <p>Built with Django & Python</p>
+                <p>OpenCV for Video Analysis</p>
+                <p>Machine Learning Detection</p>
+            </footer-section>
+            <footer-section>
+                <h4>Connect</h4>
+                <p>Email: info@videoauth.com</p>
+                <p>Support: support@videoauth.com</p>
+                <p>Status: Active & Running</p>
+            </footer-section>
+        </footer-content>
+        <footer-bottom>
+            <p>&copy; 2025 VideoAuth. All rights reserved. | <span style="color: var(--primary-color);">Made with ❤️ using Django & Python</span></p>
+        </footer-bottom>
+    </footer>
+</body>
+</html>

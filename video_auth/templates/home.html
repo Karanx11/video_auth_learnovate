@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>🎬 Welcome to VideoAuth</h1>
+        <p>Advanced video verification system using cutting-edge AI and machine learning technology. Secure, fast, and reliable authentication in seconds.</p>
+        <div class="hero-buttons">
+            <a href="/register/" class="btn btn-primary">Get Started Now</a>
+            <a href="/login/" class="btn btn-outline">Sign In</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Why Choose VideoAuth?</h2>
+        <p class="section-subtitle">Enterprise-grade video verification with advanced security features</p>
+    </div>
+    
+    <div class="feature-grid">
+        <div class="feature-card">
+            <span class="feature-icon">🔐</span>
+            <h3>Secure Verification</h3>
+            <p>Military-grade encryption ensures your video data is protected with the highest security standards.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🤖</span>
+            <h3>AI Detection</h3>
+            <p>Advanced machine learning algorithms detect AI-generated and fake videos with 99.2% accuracy.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">⚡</span>
+            <h3>Lightning Fast</h3>
+            <p>Analyze and verify videos in seconds using optimized processing pipelines.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">📊</span>
+            <h3>Detailed Reports</h3>
+            <p>Get comprehensive analysis reports with confidence scores and detailed findings.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🎯</span>
+            <h3>Duplicate Detection</h3>
+            <p>Prevent video reuse with SHA256-based duplicate detection across the platform.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">📱</span>
+            <h3>Multi-Platform</h3>
+            <p>Seamlessly works across desktop, tablet, and mobile devices with responsive design.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="section" style="background: rgba(102, 126, 234, 0.05); border-radius: 20px; margin: 3rem 2rem;">
+    <div class="feature-grid">
+        <div style="text-align: center;">
+            <h3 style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 0.5rem;">50K+</h3>
+            <p style="color: var(--text-secondary);">Videos Verified</p>
+        </div>
+        <div style="text-align: center;">
+            <h3 style="font-size: 2.5rem; color: var(--success-color); margin-bottom: 0.5rem;">99.2%</h3>
+            <p style="color: var(--text-secondary);">Detection Accuracy</p>
+        </div>
+        <div style="text-align: center;">
+            <h3 style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 0.5rem;">5000+</h3>
+            <p style="color: var(--text-secondary);">Active Users</p>
+        </div>
+        <div style="text-align: center;">
+            <h3 style="font-size: 2.5rem; color: var(--warning-color); margin-bottom: 0.5rem;">&lt;1s</h3>
+            <p style="color: var(--text-secondary);">Verification Time</p>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Ready to Get Started?</h2>
+        <p class="section-subtitle">Join thousands of users securing their digital identity with VideoAuth</p>
+    </div>
+    
+    <div class="card" style="text-align: center; max-width: 600px; margin: 0 auto; padding: 3rem;">
+        <h3 style="margin-bottom: 1rem;">Create Your Account Today</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Sign up in minutes and start verifying videos with enterprise-grade security.</p>
+        <a href="/register/" class="btn btn-primary">Get Started for Free</a>
+    </div>
+</section>
+
+{% endblock %}

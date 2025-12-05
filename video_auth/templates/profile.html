@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="section">
+    <div class="feature-grid">
+        <!-- Profile Information Card -->
+        <div class="card scale-up">
+            <div class="card-header">👤 Your Profile</div>
+            <div class="card-body">
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Username</p>
+                    <p style="font-size: 1.2rem; font-weight: 600;">{{ profile.user.username }}</p>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Email</p>
+                    <p style="font-size: 1rem; font-weight: 500;">{{ profile.user.email }}</p>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Full Name</p>
+                    <p style="font-size: 1rem; font-weight: 500;">{{ profile.full_name }}</p>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Status</p>
+                    {% if profile.is_verified %}
+                        <span class="badge badge-success">✓ Verified</span>
+                    {% else %}
+                        <span class="badge badge-warning">⏳ Pending</span>
+                    {% endif %}
+                </div>
+                <div>
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Registered Since</p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">{{ profile.user.date_joined|date:"M d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Management Card -->
+        <div class="card scale-up" style="animation-delay: 0.1s;">
+            <div class="card-header">🎬 Video Management</div>
+            <div class="card-body">
+                {% if profile.video %}
+                    <div style="margin-bottom: 1.5rem;">
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Current Video</p>
+                        <video style="width: 100%; border-radius: 12px; box-shadow: var(--shadow-lg); margin-bottom: 1rem;" controls>
+                            <source src="{{ profile.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Uploaded: {{ profile.uploaded_at|date:"M d, Y H:i" }}</p>
+                        
+                        {% if profile.video_status %}
+                            <div style="margin-bottom: 1rem;">
+                                <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Verification Status</p>
+                                {% if profile.video_status == 'verified' %}
+                                    <span class="badge badge-success">✓ Verified</span>
+                                {% elif profile.video_status == 'duplicate' %}
+                                    <span class="badge badge-danger">⚠ Duplicate Detected</span>
+                                {% elif profile.video_status == 'ai_generated' %}
+                                    <span class="badge badge-danger">⚠ AI-Generated Detected</span>
+                                {% elif profile.video_status == 'suspicious' %}
+                                    <span class="badge badge-warning">⚠ Suspicious Activity</span>
+                                {% else %}
+                                    <span class="badge badge-primary">⏳ Pending Review</span>
+                                {% endif %}
+                            </div>
+                            
+                            {% if profile.ai_confidence %}
+                                <div>
+                                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Detection Confidence</p>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar {% if profile.ai_confidence >= 70 %}danger{% elif profile.ai_confidence >= 40 %}warning{% else %}success{% endif %}" style="width: {{ profile.ai_confidence }}%;"></div>
+                                    </div>
+                                    <p style="font-size: 0.9rem; color: var(--text-muted);">{{ profile.ai_confidence }}% confidence</p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <form method="post" action="" style="margin-top: 1.5rem;">
+                            {% csrf_token %}
+                            <button type="submit" name="delete_video" class="btn btn-secondary w-100">🗑️ Delete Video</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div style="text-align: center; padding: 2rem 0;">
+                        <p style="font-size: 3rem; margin-bottom: 1rem;">📹</p>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">No video uploaded yet</p>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">Upload a video to get started with verification</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Upload Section -->
+    <div class="card" style="margin-top: 2rem; animation: slideDown 0.6s ease;">
+        <div class="card-header">📤 Upload New Video</div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" id="video-upload-form">
+                {% csrf_token %}
+                
+                <div class="drop-area" id="drop-area">
+                    <div id="drop-text" class="drop-text">
+                        <p>📹 Drag and drop your video here</p>
+                        <small>or click to browse (MP4, WebM, MOV - Max 50MB)</small>
+                    </div>
+                    <div id="preview-container" style="display: none;">
+                        <video id="video-preview" style="width: 100%; max-height: 300px; border-radius: 12px; margin-bottom: 1rem;" controls></video>
+                        <div id="file-info" style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;"></div>
+                    </div>
+                    <input type="file" id="video_file" name="video" accept="video/mp4,video/webm,video/mov" style="display: none;">
+                </div>
+
+                <div id="progress-bar" class="progress-bar-container" style="display: none; margin-top: 1.5rem;">
+                    <div id="progress" class="progress-bar"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" style="margin-top: 1.5rem;">Upload Video</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+const dropArea = document.getElementById('drop-area');
+const fileInput = document.getElementById('video_file');
+const previewContainer = document.getElementById('preview-container');
+const videoPreview = document.getElementById('video-preview');
+const dropText = document.getElementById('drop-text');
+const fileInfo = document.getElementById('file-info');
+const progressBar = document.getElementById('progress-bar');
+const progress = document.getElementById('progress');
+const form = document.getElementById('video-upload-form');
+
+dropArea.addEventListener('click', () => fileInput.click());
+
+dropArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropArea.classList.add('active');
+});
+
+dropArea.addEventListener('dragleave', e => {
+    e.preventDefault();
+    dropArea.classList.remove('active');
+});
+
+dropArea.addEventListener('drop', e => {
+    e.preventDefault();
+    dropArea.classList.remove('active');
+    if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        showPreview(fileInput.files[0]);
+    }
+});
+
+fileInput.addEventListener('change', e => {
+    if (fileInput.files.length) {
+        showPreview(fileInput.files[0]);
+    }
+});
+
+function showPreview(file) {
+    if (file && file.type.startsWith('video/')) {
+        if (!validateFile(file)) return;
+        const url = URL.createObjectURL(file);
+        videoPreview.src = url;
+        previewContainer.style.display = 'block';
+        dropText.innerHTML = `<strong>📄 ${file.name}</strong><br><small>${(file.size/1024/1024).toFixed(2)} MB</small>`;
+        dropText.style.display = 'block';
+        fileInfo.innerHTML = `<strong>Name:</strong> ${file.name}<br><strong>Size:</strong> ${(file.size/1024/1024).toFixed(2)} MB`;
+    } else {
+        previewContainer.style.display = 'none';
+        dropText.innerHTML = `<p>📹 Drag and drop your video here</p><small>or click to browse (MP4, WebM, MOV - Max 50MB)</small>`;
+        dropText.style.display = 'block';
+    }
+}
+
+function validateFile(file) {
+    const allowed = ['mp4', 'webm', 'mov'];
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!allowed.includes(ext)) {
+        alert('Invalid file type. Allowed: mp4, webm, mov.');
+        fileInput.value = '';
+        return false;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+        alert('File too large (max 50MB).');
+        fileInput.value = '';
+        return false;
+    }
+    return true;
+}
+
+form.addEventListener('submit', function(e) {
+    if (fileInput.files.length) {
+        progressBar.style.display = 'block';
+        let percent = 0;
+        progress.style.width = '0';
+        let interval = setInterval(() => {
+            percent += 10;
+            progress.style.width = percent + '%';
+            if (percent >= 100) {
+                clearInterval(interval);
+                setTimeout(() => { progressBar.style.display = 'none'; }, 800);
+            }
+        }, 80);
+    }
+});
+</script>
+
+{% endblock %}

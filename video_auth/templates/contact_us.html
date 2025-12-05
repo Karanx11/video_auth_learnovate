@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="section">
+    <!-- Header -->
+    <div class="section-header" style="margin-bottom: 3rem;">
+        <h1 class="section-title" style="font-size: 3rem;">📧 Get In Touch</h1>
+        <p class="section-subtitle">We'd love to hear from you. Send us a message and we'll respond within 24 hours.</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} fade-in" style="margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="feature-grid">
+        <!-- Contact Form -->
+        <div class="card slide-in-left">
+            <div class="card-header">✉️ Send us a Message</div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group fade-in">
+                        <label for="id_name">Your Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group fade-in">
+                        <label for="id_email">Email Address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group fade-in">
+                        <label for="id_subject">Subject</label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                            <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.subject.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group fade-in">
+                        <label for="id_message">Message</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                            <div class="alert alert-danger" style="margin-top: 0.5rem;">{{ form.message.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" style="margin-top: 1.5rem;">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="card slide-in-right" style="animation-delay: 0.1s;">
+            <div class="card-header">🛎️ Contact Info</div>
+            <div class="card-body">
+                <div style="margin-bottom: 2rem;">
+                    <div class="feature-icon" style="margin-bottom: 1rem;">📧</div>
+                    <h3 style="margin-bottom: 0.5rem;">Email</h3>
+                    <p style="color: var(--text-secondary);">support@videoauth.com</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">We respond within 24 hours</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <div class="feature-icon" style="margin-bottom: 1rem;">📞</div>
+                    <h3 style="margin-bottom: 0.5rem;">Phone</h3>
+                    <p style="color: var(--text-secondary);">+1 (555) 123-4567</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Mon - Fri, 9 AM - 5 PM</p>
+                </div>
+
+                <div>
+                    <div class="feature-icon" style="margin-bottom: 1rem;">🌍</div>
+                    <h3 style="margin-bottom: 0.5rem;">Location</h3>
+                    <p style="color: var(--text-secondary);">San Francisco, California</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">United States</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div style="margin-top: 3rem;">
+        <div class="section-header">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+        </div>
+        <div class="feature-grid">
+            <div class="card">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">❓ How long does verification take?</h3>
+                <p style="color: var(--text-secondary);">Most videos are verified within seconds. Our advanced AI algorithms process videos in real-time with 99.2% accuracy.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">🔐 How is my data protected?</h3>
+                <p style="color: var(--text-secondary);">We use military-grade encryption and follow GDPR compliance standards. Your data is never shared with third parties.</p>
+            </div>
+            <div class="card">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">💰 Is there a cost?</h3>
+                <p style="color: var(--text-secondary);">VideoAuth is free for all users. Premium features may be available in the future for enterprise clients.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Close alert functionality
+document.querySelectorAll('.close-alert').forEach(btn => {
+    btn.addEventListener('click', function() {
+        this.parentElement.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            this.parentElement.remove();
+        }, 300);
+    });
+});
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+</script>
+
+{% endblock %}
+            </div>
+
+            <div class="info-card info-card-2">
+                <div class="info-icon">📱</div>
+                <h3>Phone</h3>
+                <p>+1 (555) 123-4567</p>
+            </div>
+
+            <div class="info-card info-card-3">
+                <div class="info-icon">📍</div>
+                <h3>Address</h3>
+                <p>123 Tech Street, Silicon Valley, CA</p>
+            </div>
+
+            <div class="info-card info-card-4">
+                <div class="info-icon">⏰</div>
+                <h3>Hours</h3>
+                <p>Mon-Fri: 9 AM - 6 PM PT</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.close-alert').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.parentElement.style.display = 'none';
+        });
+    });
+</script>
+{% endblock %}

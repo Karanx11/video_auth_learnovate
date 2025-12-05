@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="section">
+    <!-- Header -->
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <a href="/users/" style="color: var(--primary-color); font-size: 1.5rem; text-decoration: none;">←</a>
+        <h1 style="margin: 0; font-size: 2rem; color: var(--text-primary);">👤 User Profile</h1>
+    </div>
+
+    <div class="feature-grid">
+        <!-- User Information -->
+        <div class="card fade-in">
+            <div class="card-header">📋 Profile Information</div>
+            <div class="card-body">
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">User ID</p>
+                    <p style="font-weight: 600;">{{ user.id }}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Username</p>
+                    <p style="font-weight: 600; font-size: 1.1rem;">{{ user.username }}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Email Address</p>
+                    <p style="font-weight: 500;">{{ user.email }}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Full Name</p>
+                    <p style="font-weight: 500;">{{ profile.full_name }}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Member Since</p>
+                    <p style="font-weight: 500;">{{ user.date_joined|date:"M d, Y H:i" }}</p>
+                </div>
+
+                <div>
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Verification Status</p>
+                    {% if profile.is_verified %}
+                        <span class="badge badge-success">✓ Verified</span>
+                    {% else %}
+                        <span class="badge badge-warning">⏳ Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Information -->
+        <div class="card fade-in" style="animation-delay: 0.1s;">
+            <div class="card-header">🎬 Video Details</div>
+            <div class="card-body">
+                {% if profile.video %}
+                    <video style="width: 100%; border-radius: 12px; box-shadow: var(--shadow-lg); margin-bottom: 1.5rem;" controls>
+                        <source src="{{ profile.video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <div style="margin-bottom: 1rem;">
+                        <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Upload Date</p>
+                        <p style="font-weight: 500;">{{ profile.uploaded_at|date:"M d, Y H:i" }}</p>
+                    </div>
+
+                    {% if profile.video_status %}
+                        <div style="margin-bottom: 1rem;">
+                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Status</p>
+                            {% if profile.video_status == 'verified' %}
+                                <span class="badge badge-success">✓ Verified</span>
+                            {% elif profile.video_status == 'duplicate' %}
+                                <span class="badge badge-danger">⚠ Duplicate</span>
+                            {% elif profile.video_status == 'ai_generated' %}
+                                <span class="badge badge-danger">⚠ AI-Generated</span>
+                            {% else %}
+                                <span class="badge badge-primary">⏳ Pending</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if profile.ai_confidence %}
+                        <div>
+                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem;">Detection Confidence</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar {% if profile.ai_confidence >= 70 %}danger{% elif profile.ai_confidence >= 40 %}warning{% else %}success{% endif %}" style="width: {{ profile.ai_confidence }}%;"></div>
+                            </div>
+                            <p style="font-weight: 500; margin-top: 0.5rem;">{{ profile.ai_confidence|floatformat:1 }}%</p>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div style="text-align: center; padding: 2rem 0;">
+                        <p style="font-size: 3rem; margin-bottom: 1rem;">📹</p>
+                        <p style="color: var(--text-secondary);">No video uploaded yet</p>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">This user has not uploaded a verification video</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div style="margin-top: 2rem;">
+        <a href="/users/" class="btn btn-outline">← Back to Users</a>
+    </div>
+</div>
+
+{% endblock %}

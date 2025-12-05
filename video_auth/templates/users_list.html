@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="section">
+    <!-- Header -->
+    <div class="section-header" style="margin-bottom: 2rem;">
+        <h1 class="section-title">👥 Registered Users</h1>
+        <p class="section-subtitle">Manage and view all registered users on the platform</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="feature-grid" style="margin-bottom: 2rem;">
+        <div class="card text-center" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(0, 242, 254, 0.2));">
+            <p style="color: var(--text-secondary); margin: 0;">Total Users</p>
+            <h2 style="font-size: 3rem; margin: 0.5rem 0; color: var(--primary-color);">{{ users.count }}</h2>
+        </div>
+    </div>
+
+    <!-- Table -->
+    {% if users %}
+        <div class="card" style="overflow-x: auto;">
+            <div class="card-header">📊 User Directory</div>
+            <div class="card-body" style="padding: 0;">
+                <table style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Full Name</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td><strong>{{ forloop.counter }}</strong></td>
+                                <td>{{ user.username }}</td>
+                                <td style="font-size: 0.9rem;">{{ user.email }}</td>
+                                <td>{{ user.profile.full_name }}</td>
+                                <td>
+                                    {% if user.profile.is_verified %}
+                                        <span class="badge badge-success">✓ Verified</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">⏳ Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td style="font-size: 0.9rem; color: var(--text-muted);">{{ user.date_joined|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'user_detail' user.id %}" class="btn" style="padding: 6px 12px; font-size: 0.85rem; background: var(--primary-gradient); color: white; text-decoration: none; border-radius: 50px; display: inline-block; transition: all var(--transition-normal);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">View</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <p style="color: var(--text-secondary);">Showing <strong style="color: var(--primary-color);">{{ users.count }}</strong> registered user(s)</p>
+        </div>
+    {% else %}
+        <div class="card text-center" style="padding: 3rem;">
+            <p style="font-size: 3rem; margin-bottom: 1rem;">👤</p>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 1rem;">No users registered yet</p>
+            <p style="color: var(--text-muted);">Users will appear here once they sign up</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

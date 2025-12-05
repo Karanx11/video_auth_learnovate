@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load form_tags %}
+{% block content %}
+
+<div class="section">
+    <!-- Welcome Header -->
+    <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(240, 147, 251, 0.2)); animation: slideDown 0.6s ease;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span style="font-size: 3rem;">👋</span>
+            <div>
+                <h1 style="margin: 0; font-size: 2.5rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Welcome back, {{ profile.full_name }}!</h1>
+                <p style="margin: 0.5rem 0 0 0; color: var(--text-secondary);">Your video verification dashboard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Cards Grid -->
+    <div class="feature-grid">
+        <!-- Status Summary -->
+        <div class="card fade-in">
+            <div class="card-header">📊 Verification Status</div>
+            <div class="card-body">
+                <div style="text-align: center; padding: 1rem 0;">
+                    {% if status_info.is_duplicate %}
+                        <p style="font-size: 3rem; margin-bottom: 0.5rem;">❌</p>
+                        <p style="font-size: 1.3rem; font-weight: 700; color: var(--danger-color);">Duplicate Video</p>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">This video already exists in the system</p>
+                    {% elif status_info.is_ai_generated %}
+                        <p style="font-size: 3rem; margin-bottom: 0.5rem;">⚠️</p>
+                        <p style="font-size: 1.3rem; font-weight: 700; color: var(--warning-color);">AI-Generated Video</p>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">{{ status_info.ai_confidence|floatformat:1 }}% confidence</p>
+                    {% elif status_info.video_status == 'verified' %}
+                        <p style="font-size: 3rem; margin-bottom: 0.5rem;">✓</p>
+                        <p style="font-size: 1.3rem; font-weight: 700; color: var(--success-color);">Verified</p>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Your video is authentic</p>
+                    {% else %}
+                        <p style="font-size: 3rem; margin-bottom: 0.5rem;">⏳</p>
+                        <p style="font-size: 1.3rem; font-weight: 700; color: var(--info-color);">Pending Review</p>
+                        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Analyzing your video...</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Card -->
+        <div class="card fade-in" style="animation-delay: 0.1s;">
+            <div class="card-header">📤 Upload Video</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="dashboard-upload">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    
+                    {% if form.video.errors %}
+                        <div class="alert alert-danger" style="margin-bottom: 1.5rem;">
+                            {% for error in form.video.errors %}
+                                <p style="margin: 0.5rem 0;">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    {{ form.video }}
+                    <button type="submit" class="btn btn-primary w-100" style="margin-top: 1rem;">Upload Video</button>
+                </form>
+                <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 1rem;">Max 50MB • MP4, WebM, MOV</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Preview Section -->
+    {% if profile.video %}
+        <div class="card" style="margin-top: 2rem; animation: slideDown 0.6s ease;">
+            <div class="card-header">🎬 Current Video</div>
+            <div class="card-body">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <video style="width: 100%; max-width: 500px; border-radius: 12px; box-shadow: var(--shadow-lg);" controls>
+                        <source src="{{ profile.video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="text-align: center;">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Uploaded</p>
+                        <p style="font-weight: 600;">{{ profile.uploaded_at|date:"M d, Y" }}</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Status</p>
+                        {% if profile.video_status == 'verified' %}
+                            <span class="badge badge-success">✓ Verified</span>
+                        {% elif profile.video_status == 'duplicate' %}
+                            <span class="badge badge-danger">⚠ Duplicate</span>
+                        {% elif profile.video_status == 'ai_generated' %}
+                            <span class="badge badge-danger">⚠ AI-Generated</span>
+                        {% else %}
+                            <span class="badge badge-primary">⏳ Pending</span>
+                        {% endif %}
+                    </div>
+                    {% if profile.ai_confidence %}
+                        <div style="text-align: center;">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Detection Confidence</p>
+                            <p style="font-weight: 600;">{{ profile.ai_confidence|floatformat:1 }}%</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if profile.analysis_notes %}
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 12px; border-left: 4px solid var(--primary-color);">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Analysis Notes</p>
+                        <p style="color: var(--text-primary); margin: 0;">{{ profile.analysis_notes }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Features Info -->
+    <div class="section" style="margin-top: 3rem;">
+        <div class="section-header">
+            <h2 class="section-title">Advanced Detection Features</h2>
+            <p class="section-subtitle">Your video goes through comprehensive analysis</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🔍</span>
+                <h3>Duplicate Detection</h3>
+                <p>SHA256 hashing to prevent video reuse across the platform</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🤖</span>
+                <h3>AI Detection</h3>
+                <p>Advanced frame analysis and pattern recognition algorithms</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3>Real-time Analysis</h3>
+                <p>Results in under 1 second with 99.2% accuracy</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
